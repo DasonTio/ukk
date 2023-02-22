@@ -54,7 +54,7 @@ class CommentController extends Controller
         $tags = $matches[1];
         if ($tags != null) {
             foreach ($tags as $tag) {
-                $tag = Tag::create([
+                $tag = Tag::updateOrCreate([
                     "name" => $tag,
                 ]);
                 TagComment::create([
