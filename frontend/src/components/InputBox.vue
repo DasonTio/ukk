@@ -1,6 +1,5 @@
 <template>
     <div class="flex">
-        <!-- <label :id="id" class="capitalize">{{ name }}</label> -->
         <input :id="id" class="p-4 border-2 rounded-md w-full" :type="type" :name="name.toLowerCase().replace(' ', '_')"
             :placeholder="name" :value="value ?? ''">
     </div>

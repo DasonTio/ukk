@@ -1,14 +1,11 @@
-<script setup>
-import axios from 'axios';
-import { API_URL } from '../constant';
-import { RouterLink } from 'vue-router';
-</script>
 <template>
+    <!-- Nav Bar -->
     <nav class="flex flex-col justify-between py-20 border-r-2 bg-white">
         <ul class="list-none flex flex-col items-center" style="gap:2rem;">
             <li class="grid grid-cols-[80px_auto] ">
                 <i :class="(path == 'home' ? 'text-primary' : 'text-secondary') + ' fa-solid fa-house text-3xl'"></i>
-                <RouterLink :to="{ name: 'home' }" :class="(path == 'home' ? 'text-primary' : 'text-secondary') + '  text-2xl font-bold'">
+                <RouterLink :to="{ name: 'home' }"
+                    :class="(path == 'home' ? 'text-primary' : 'text-secondary') + '  text-2xl font-bold'">
                     Home
                 </RouterLink>
             </li>
@@ -27,6 +24,10 @@ import { RouterLink } from 'vue-router';
     </nav>
 </template>
 <script>
+
+import axios from 'axios';
+import { API_URL } from '../constant';
+import { RouterLink } from 'vue-router';
 export default {
     name: "NavBar",
     data() {
@@ -35,11 +36,15 @@ export default {
         }
     },
     methods: {
+        /**
+         * Function For Logout
+         */
         logout: async function () {
             axios.defaults.headers.common['Authorization'] = localStorage.token
-            const response = await axios.post(`${API_URL}/auth/logout`)
+            const response = await axios.post(`${API_URL}/auth/logout`).catch(err=>this.popMessage('Something went wrong'))
             localStorage.clear();
-            this.$router.push({name:'login'});
+            this.popMessage("Logout Success", false);
+            this.$router.push({ name: 'login' });
         }
     }
 }

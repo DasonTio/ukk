@@ -72,9 +72,10 @@ export default {
             const form = new FormData(event.target);
             form.append('tweet_id', this.route.tweetId);
 
-            const response = await axios.post(`${API_URL}/comment`, form);
+            const response = await axios.post(`${API_URL}/comment`, form).catch((err)=>this.popMessage("Something went wrong"));
             const responseData = response.data;
 
+            this.popMessage("Post Comment Success", false);
             await this.fetchSingleTweet();
             comment.value = "";
         }

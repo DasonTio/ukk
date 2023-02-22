@@ -35,6 +35,9 @@ export default {
         Button
     },
     methods: {
+        /**
+         * Previewing Image 
+         */
         previewImage: function (e) {
             const ImageLabel = document.getElementById('input-file-label');
             const file = e.target.files[0];
@@ -46,10 +49,16 @@ export default {
             }
             reader.readAsDataURL(file);
         },
+        /**
+         * Preview Image at the Start with data passed in props
+         */
         previewImageFromUrl: function () {
             const ImageLabel = document.getElementById('input-file-label');
             ImageLabel.style.backgroundImage = `url('${BASE_URL}${this.user.profile}')`;
         },
+        /**
+         * Update User 
+         */
         updateUser: async function (e) {
             const ImageFile = document.getElementById("input-file").files[0];
             const form = new FormData(e.target);
@@ -59,7 +68,8 @@ export default {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-            })
+            }).catch((err)=> this.popMessage('Update User Failed'. false))
+            this.popMessage('Update User Success', false);
 
             this.$emit('refreshTweet');
         },

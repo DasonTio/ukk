@@ -8,6 +8,9 @@ use Illuminate\Http\Request;
 
 class FilterController extends Controller
 {
+    /**
+     * Filtering Tweets and Comment with a specifc tag 
+     */
     public function getFilter(Request $request)
     {
         $tags = Tag::where('name', $request->name)->get()->load(['tagComments', 'tagComments.comment','tagTweets','tagTweets.tweet', 'tagTweets.tweet.user', 'tagComments.comment.user'])->first();

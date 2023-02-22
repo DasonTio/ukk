@@ -1,5 +1,6 @@
 <template lang="">
-    <div class="grid grid-cols-[70px_auto] items-start gap-2 p-4 m-4 border-b-2 ">
+    <!-- Comment or Tweet List -->
+    <div @click="$router.push({path:`/${usedData.tweet_id}`})" class="cursor-pointer grid grid-cols-[70px_auto] items-start gap-2 p-4 w-full border-b-2">
         <img class="aspect-square rounded-full" :src="`${BASE_URL}${usedData.user.profile}`" alt="">
         <div class="flex flex-col">
             <p class="text-xl flex items-center gap-1 text-placeholder ">
@@ -12,13 +13,16 @@
                 </span>
             </p>
             <p class="break-all">
-                {{ usedData.tweet ?? usedData.comment }}
+                {{ usedData.content }}
             </p>
         </div>
     </div>
 </template>
 <script>
 import { BASE_URL } from '../../constant';
+/**
+ * Checking the date Difference between Create post date and Current date
+ */
 function dateDifference(date) {
     let diff = (new Date() - new Date(date)) / 1000; // Difference in Seconds
     let day = 60 * 60 * 24,
@@ -34,12 +38,11 @@ export default {
     data() {
         return {
             BASE_URL,
-            usedData: this.data.tweet ?? this.data.comment,
-            posted_at: dateDifference(this.data.tweet.created_at ?? this.data.comment.created_at)
+            posted_at: dateDifference(this.usedData.created_at  )
         }
     },
-    props: ['data'],
-    
+    props: ['usedData'],
+
 }
 </script>
 <style lang="">

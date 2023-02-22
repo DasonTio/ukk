@@ -1,5 +1,6 @@
 <template>
     <main class="flex justify-center items-center w-1/1 h-[100vh]">
+        <!-- Register Form -->
         <form @submit.prevent="submitForm($event)" class="w-1/5 h-fit flex flex-col gap-1 text-center">
             <div class="header">
                 <h1 class="text-3xl font-extrabold">Hi, Welcome 👋</h1>
@@ -11,10 +12,11 @@
                 <InputBox name="Password" type="password" id="input-pass" />
                 <InputBox name="Confirm Password" type="password" id="input-confirmpass" />
             </div>
-            <button @click="toggleRegisterProfile()" v-show="!toggle" class="rounded-full w-full p-5 text-white font-medium"
-                type="button" style="background-color: #66A4FF;">Sign Up</button>
+            <a @click="toggleRegisterProfile()" v-show="!toggle" class="rounded-full w-full p-5 text-white font-medium"
+                type="button" style="background-color: #66A4FF;">Sign Up</a>
 
 
+            <!-- Register Form - Step 2 -->
             <div v-show="toggle" class="grid gap-y-2">
                 <div class="inputbox-file">
                     <input @change="previewImage($event)" type="file" name="profile" accept="image/*" id="input-file"
@@ -28,7 +30,7 @@
             <Button v-show="toggle" name="Complete" type="submit" />
 
             <p class="text-sm">
-                Already have an account? Sign In
+                Already have an account? 
                 <RouterLink :to="{ name: 'login' }" class="font-bold">Sign In</RouterLink>
             </p>
         </form>
@@ -66,6 +68,14 @@ export default {
             } else this.toggle = true
 
         },
+        /**
+         * Preview Image Just like anything else 
+         * 
+         * @example
+         * 
+         * @click="previewImage($event)"
+         * it's going to fetch input files and place image 
+         */
         previewImage: function (e) {
             const ImageLabel = document.getElementById('input-file-label');
             const file = e.target.files[0];
@@ -76,19 +86,22 @@ export default {
             }
             reader.readAsDataURL(file);
         },
+        /**
+         * Submit Form fetch it to api 
+         */
         submitForm: async function (event) {
             const image = document.getElementById('input-file').files[0];
             const form = new FormData(event.target);
             form.append("image", image);
 
-            this.popMessage("Completed", false)
             const response = await axios.post(`${API_URL}/auth/register`, form, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 },
             }).catch((err) => {
-                this.popMessage(err)
+                this.popMessage("Something went wrong")
             });
+            this.popMessage("Completed", false)
 
             const responseData = response.data.data;
             if (response.status == 200) {

@@ -36,11 +36,19 @@ class CommentController extends Controller
             ]);
         }
 
-
         $comment = $tweet->comments()->create([
             "user_id" => $request->user()->id,
             "comment" => $request->comment
         ]);
+
+        /**
+         * Regex
+         * 
+         * Getting tag's and inserting it into specified database
+         * 
+         * Input: "Comment #tag#helloa"
+         * Output: ["#tag", "helloa"];
+         */
 
         preg_match_all('~(#[a-zA-Z0-9]+)~', $request->comment, $matches, PREG_PATTERN_ORDER);
         $tags = $matches[1];
@@ -98,6 +106,15 @@ class CommentController extends Controller
             "comment" => $request->comment,
         ]);
 
+
+        /**
+         * Regex
+         * 
+         * Getting tag's and inserting it into specified database
+         * 
+         * Input: "Comment #tag#helloa"
+         * Output: ["#tag", "helloa"];
+         */
         preg_match_all('~(#[a-zA-Z0-9]+)~', $request->comment, $matches, PREG_PATTERN_ORDER);
         $tags = $matches[1];
         if ($tags != null) {

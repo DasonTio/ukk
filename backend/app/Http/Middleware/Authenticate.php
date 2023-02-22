@@ -20,6 +20,10 @@ class Authenticate extends Middleware
     }
     public function handle($request, Closure $next, ...$guards)
     {
+        /**
+         * Checking from Axios.defaults.commons['Authorization']
+         * The Authorization will be Sanctum Token
+         */
         try {
             $token = $request->header('Authorization');
             if (!isset($token)) {
@@ -30,6 +34,14 @@ class Authenticate extends Middleware
 
             $token = str_replace('Bearer ', '', $token);
             $user = User::where(['remember_token' => $token])->get()->first();
+            
+            /**
+             * Auth::LoginUsingId
+             * will be affect in getting user's data
+             * 
+             * @example
+             * $request->user() or auth()->user() 
+             */
             Auth::loginUsingId($user->id);
             return $next($request);
         } catch (Exception $e) {

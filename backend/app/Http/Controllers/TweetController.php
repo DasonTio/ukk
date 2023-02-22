@@ -51,6 +51,15 @@ class TweetController extends Controller
             $credentials["media"] = Storage::url($path);
         }
 
+
+        /**
+         * Regex
+         * 
+         * Getting tag's and inserting it into specified database
+         * 
+         * Input: "Comment #tag#helloa"
+         * Output: ["#tag", "helloa"];
+         */
         preg_match_all('~(#[a-zA-Z0-9]+)~', $request->tweet, $matches, PREG_PATTERN_ORDER);
         $tags = $matches[1];
         $tweet = Tweet::create($credentials);
@@ -106,6 +115,10 @@ class TweetController extends Controller
             "tweet" => $request->tweet,
         ];
 
+        
+        /**
+         * Checking if the image is updated or not
+         */
         if ($request->update_status == 'true') {
             if ($request->file('media') !== null) {
                 $file = $request->file('media');
@@ -119,11 +132,20 @@ class TweetController extends Controller
         }
 
         $tweet = Tweet::find($id);
-        TagTweet::where(['tweet_id'=>$id])->delete();
+        TagTweet::where(['tweet_id' => $id])->delete();
 
         if (file_exists($tweet->media)) @unlink($tweet->media);
         $tweet->update($credentials);
 
+
+        /**
+         * Regex
+         * 
+         * Getting tag's and inserting it into specified database
+         * 
+         * Input: "Comment #tag#helloa"
+         * Output: ["#tag", "helloa"];
+         */
         preg_match_all('~(#[a-zA-Z0-9]+)~', $request->tweet, $matches, PREG_PATTERN_ORDER);
         $tags = $matches[1];
         if ($tags != null) {
@@ -153,6 +175,9 @@ class TweetController extends Controller
         ]);
     }
 
+    /**
+     * Showing User's tweets and comments
+     */
     public function user(Request $request): Response
     {
         return response([

@@ -12,12 +12,14 @@ vue.mixin({
   methods: {
     popMessage: function (message, err = true) {
       let messageDOM = document.getElementById("vue-global-pop-message");
+      messageDOM.classList.remove('err')
+
       messageDOM.innerHTML = message;
       messageDOM.classList.add("in");
       if(err) messageDOM.classList.add('err')
       setTimeout(() => {
         messageDOM.classList.remove("in");
-      }, 2000);
+      }, 1000);
     },
   },
 });

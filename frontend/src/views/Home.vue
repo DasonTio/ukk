@@ -70,31 +70,31 @@ export default {
         Button
     },
     methods: {
+        /**
+         * Getting User (Client) Detail
+         */
         fetchMe: async function () {
-            /**
-             * Getting User (Client) Detail
-             */
             const response = await axios.get(`${API_URL}/auth/me`, {
                 headers: {}
             });
             const responseData = response.data.data;
             this.user = responseData;
         },
+        /**
+         * Getting All Tweets
+         */
         fetchTweets: async function () {
-            /**
-             * Getting All Tweets
-             */
             const response = await axios.get(`${API_URL}/tweet`);
             const responseData = response.data.data;
 
             this.tweets = responseData;
             console.log(responseData);
         },
+        /**
+         * Getting files in element with id named media
+         * and append it into media
+         */
         postTweet: async function (event) {
-            /**
-             * Getting files in element with id named media
-             * and append it into media
-             */
             const media = document.getElementById('media').files[0];
             const data = new FormData(event.target);
             data.append("media", media);
@@ -103,36 +103,42 @@ export default {
                 header: {
                     'Content-Type': 'multipart/form-data'
                 }
-            });
+            }).catch((err) => this.popMessage("Something Went Wrong"));
 
             if (response.status == 200) {
+                this.popMessage("Post Tweet Success", false);
                 this.fetchTweets()
                 this.clearForm();
             };
         },
+        /**
+         * Clear Create Post Form
+         */
         clearForm: function () {
-            /**
-             * Clear Create Post Form
-             */
             const preview = document.getElementById('preview');
             document.getElementById('media').value = null;
             preview.classList.remove('active');
             document.getElementById('tweet').value = "";
         },
 
-        // Toggling Post Preview (On)
+        /**
+         *  Toggling Post Preview (On)
+         */
         addPostPreview: function () {
             this.post.active = true
         },
-        // Toggling Post Preview (Off)
+
+        /**
+         * Toggling Post Preview (Off)
+         */
         closePostPreview: function () {
             document.getElementById('media').value = null;
             this.post.active = false
         },
+        /**
+         * Place Image Preview to the preview slot
+         */
         postPreviewImage: function (e) {
-            /**
-             * Place Image Preview to the preview slot
-             */
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();

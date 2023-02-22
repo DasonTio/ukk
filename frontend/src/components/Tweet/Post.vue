@@ -1,4 +1,4 @@
-<template>
+<template><!-- Tweet Post -->
     <div id="tweetPostMain" class="grid grid-cols-[70px_auto] items-start gap-2 p-4 m-4 border-b-2">
         <img class="aspect-square rounded-full" :src="`${BASE_URL}${data.user.profile}`" alt="">
         <div class="flex flex-col gap-2">
@@ -12,6 +12,7 @@
                         {{ posted_at }}
                     </span>
                 </p>
+                <!-- Tweet Post Action -->
                 <div id="tweetPostAction" class="flex gap-1 opacity-0">
                     <button v-if="data.user.id == active_user_id"
                         class="btn-primary-outline text-sm rounded-md px-1 aspect-square " type="button"
@@ -23,6 +24,7 @@
                 </div>
 
             </div>
+            <!-- Tweet Post Data (It'll redirect to the detail page) -->
             <div class="flex flex-col gap-2 cursor-pointer" @click="$router.push({ path: `/${data.id}` })">
                 <p class="break-all">{{ data.tweet }}</p>
                 <div class="media mb-3" v-if="data.media != null">
@@ -38,6 +40,7 @@
                 </div>
             </div>
         </div>
+        <!-- Tweet Post Edit Modal -->
         <div v-if="modal_active" id="modal" class="absolute left-0 top-0 w-full h-full flex items-center justify-center">
             <TweetUpdate @submit.prevent="updatePost($event)" :user="data.user" :data="data" action="PUT"
                 class="w-fit p-4 border-2 rounded-md bg-white z-10 max-w-md" />
@@ -50,6 +53,9 @@ import { BASE_URL, API_URL } from '../../constant';
 import TweetUpdate from './UpdatePost.vue';
 import axios from 'axios';
 
+/**
+ * Checking the date Difference between Create post date and Current date
+ */
 function dateDifference(date) {
     let diff = (new Date() - new Date(date)) / 1000; // Difference in Seconds
     let day = 60 * 60 * 24,
@@ -76,9 +82,15 @@ export default {
         TweetUpdate
     },
     methods: {
+        /**
+         * Toggle Modal
+         */
         toggleModal: function () {
             this.modal_active = !this.modal_active
         },
+        /**
+         * Update Post and trigger the parent to Refresh the page
+         */
         updatePost: async function (event) {
             const media = document.getElementById('updateMedia').files[0];
             const formData = new FormData(event.target);
@@ -88,15 +100,21 @@ export default {
                 headers: {
                     "Content-Type": 'multipart/form-data'
                 }
-            });
+            }).catch((err)=>this.popMessag("Something Went Wrong"));
+            this.popMessage('Post Updated', false);
             const responseData = response.data.data;
 
             this.toggleModal()
             this.$emit('refreshTweet');
         },
+        /**
+         * Delete Post and triggering parent to refresh the page
+         */
         deletePost: async function (event) {
-            const response = await axios.delete(`${API_URL}/tweet/${this.data.id}`);
+            const response = await axios.delete(`${API_URL}/tweet/${this.data.id}`).catch((err) =>this.popMessage('Something Went Wrong'));
             const responseData = response.data.data;
+
+            this.popMessage('Post Deleted');
             this.$emit('refreshTweet');
         }
     },

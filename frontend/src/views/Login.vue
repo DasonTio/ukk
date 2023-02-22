@@ -1,5 +1,6 @@
 <template>
     <main class="flex justify-center items-center w-1/1 h-[100vh]">
+        <!-- Login Form -->
         <form @submit.prevent="submitForm($event)" class="w-1/5 h-fit flex flex-col gap-1 text-center">
             <div class="header">
                 <h1 class="text-3xl font-extrabold">Hello Again 👋</h1>
@@ -31,6 +32,9 @@ export default {
         Button
     },
     methods: {
+        /**
+         * Getting formData and pass it into laravel Api Server as Object format
+         */
         submitForm: async function (event) {
             const form = new FormData(event.target);
             const data = Object.fromEntries(form.entries());

@@ -33,7 +33,7 @@ class AuthController extends Controller
         }
 
         $user = $request->user();
-        $token = $user->createToken('token')->plainTextToken;
+        $token = $user->createToken('token')->plainTextToken; // Generating Laravel Sanctum Token 
         $user->update([
             'remember_token' => $token
         ]);
@@ -44,6 +44,9 @@ class AuthController extends Controller
         ])->withCookie(cookie('authorization', $token));
     }
 
+    /**
+     * Deleting token and remember_token in User table 
+     */
     public function postLogout(Request $request)
     {
         $request->user()->tokens()->delete();
@@ -53,6 +56,9 @@ class AuthController extends Controller
         ])->withCookie(Cookie::forget('authorization'));
     }
 
+    /**
+     * Registering user
+     */
     public function postRegister(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -73,6 +79,11 @@ class AuthController extends Controller
             ], 422);
         }
 
+
+        /**
+         * Getting image file and store it in the server's directory and bring back the path
+         * for database purpose
+         */
         $file = $request->file('image');
         $filename = uniqid() . "." . $file->getClientOriginalExtension();
         $path = $file->storeAs('public/uploads', $filename);
@@ -94,6 +105,10 @@ class AuthController extends Controller
             "data" => User::find($user->id)
         ])->withCookie(cookie('authorization', $token));
     }
+
+    /**
+     * Updating user profile
+     */
     public function updateMe(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -124,6 +139,9 @@ class AuthController extends Controller
             "message" => "Update profile succes"
         ]);
     }
+    /**
+     * Getting User Profile
+     */
     public function getMe(Request $request)
     {
         return response([

@@ -26,12 +26,16 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     "prefix" => "/v1"
 ], function () {
-    // v1 
+    /**
+     * Prefix: /v1
+     */
     Route::group([
         "prefix" => "/auth",
         "controller" => AuthController::class
     ], function () {
-        // v1 auth
+        /**
+         * Prefix: /v1/auth
+         */
         Route::post('/login', 'postLogin');
         Route::post('/register', 'postRegister');
         Route::post('/logout', 'postLogout')->middleware('auth:sanctum');
@@ -39,14 +43,33 @@ Route::group([
         Route::get('/me', 'getMe')->middleware('auth:sanctum');
     });
 
+    /**
+     * Middleware 
+     */
     Route::group([
         "middleware" => "auth:sanctum",
     ], function () {
+        /**
+         * Hanlde user's tweet and comment
+         */
         Route::get('/tweet/user', [TweetController::class, "user"]);
+
+        /**
+         * Handle GET, POST, PUT, DELETE
+         * handling: Tweet 
+         */
         Route::apiResource("/tweet", TweetController::class);
 
+        /**
+         * Handle GET (Specified), POST, PUT, DELETE
+         * handling: Comment 
+         */
         Route::apiResource("/comment", CommentController::class)->except(['index']);
-    
+
+        /**
+         * Handle GET, POST, PUT, DELETE
+         * handling: Tag 
+         */
         Route::group([
             "prefix" => "/filter",
             "controller" => FilterController::class
